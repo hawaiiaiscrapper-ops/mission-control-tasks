@@ -1,0 +1,6 @@
+{
+  "projects": [
+    {"id": "project1", "name": "Build AI Tools", "progress": 50},
+    {"id": "project2", "name": "Daily Journaling", "progress": 80}
+  ]
+}

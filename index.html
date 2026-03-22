@@ -2521,6 +2521,52 @@
         </div>
     </div><!-- END view-people -->
 
+    <!-- CALENDAR VIEW -->
+    <div id="view-calendar" class="view" style="display: none;">
+        <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+            <h1>📅 Calendar & Scheduled Tasks</h1>
+            <p>Proactive cron jobs and scheduled tasks (pulled from OpenClaw cron).</p>
+            <div id="calendar-content"></div>
+        </div>
+    </div>
+
+    <!-- PROJECTS VIEW -->
+    <div id="view-projects" class="view" style="display: none;">
+        <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+            <h1>📊 Projects</h1>
+            <p>Track major projects with progress.</p>
+            <div id="projects-content"></div>
+        </div>
+    </div>
+
+    <!-- MEMORY VIEW -->
+    <div id="view-memory" class="view" style="display: none;">
+        <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+            <h1>🧠 Memory</h1>
+            <p>Searchable daily logs.</p>
+            <input type="text" id="memory-search" placeholder="Search memories..." oninput="searchMemory(this.value)">
+            <div id="memory-content"></div>
+        </div>
+    </div>
+
+    <!-- TEAM VIEW -->
+    <div id="view-team" class="view" style="display: none;">
+        <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+            <h1>👥 Team</h1>
+            <p>Org chart of agents and mission statement.</p>
+            <div id="team-content"></div>
+        </div>
+    </div>
+
+    <!-- OFFICE VIEW -->
+    <div id="view-office" class="view" style="display: none;">
+        <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+            <h1>🏢 Office</h1>
+            <p>2D visualization of agents working.</p>
+            <div id="office-content" style="height: 400px; background: #f0f0f0; position: relative;"></div>
+        </div>
+    </div>
+
     <!-- JOURNAL VIEW -->
     <div id="view-journal" class="view" style="display: none;">
         <div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
