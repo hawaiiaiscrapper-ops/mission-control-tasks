@@ -94,15 +94,79 @@
       "priority": "low",
       "comments": [],
       "createdAt": "2026-01-01T00:00:02Z"
+    },
+    {
+      "id": "trekker_overview",
+      "title": "🏔️ Trekker — Airbnb Scraper Bot",
+      "description": "Trekker is an Airbnb listing scraper that automatically collects property data, pricing, and updates it to Google Sheets with Discord notifications.\n\n**Core Features:**\n- 📍 Zip code & location-based scraping\n- 💰 Dual pricing capture (original & discounted)\n- 📊 Google Sheets integration via `gog` CLI\n- 💬 Discord progress notifications (#trekker & #trekker-logs)\n- 🕵️ Stealth mode with puppeteer-extra-plugin-stealth\n\n**Live Sheet:** [Hawaii Listings](https://docs.google.com/spreadsheets/d/1rzTbeY0-5RviG692axrvRxnmW3Wy-K05RpYSXIR3GTc)\n\n**Status:** ✅ Fully configured, ready to scrape on-demand. No automatic cron schedules (manual requests only).",
+      "status": "permanent",
+      "project": "trekker",
+      "tags": ["trekker", "scraper", "active"],
+      "subtasks": [
+        { "id": "sub_001", "title": "npm install dependencies", "done": true },
+        { "id": "sub_002", "title": "Configure Google Sheet ID (hawaiiaiscrapper@gmail.com)", "done": true },
+        { "id": "sub_003", "title": "Configure Discord channels (#trekker, #trekker-logs)", "done": true },
+        { "id": "sub_004", "title": "Set up puppeteer-extra-plugin-stealth", "done": true },
+        { "id": "sub_005", "title": "Test scraping: node src/index.js scrape-zip", "done": false },
+        { "id": "sub_006", "title": "Test sheet refresh: node src/index.js refresh", "done": false }
+      ],
+      "priority": "high",
+      "comments": [
+        {
+          "author": "Assistant",
+          "text": "Trekker is live and configured. Ready to scrape on manual request via:\n```bash\nnode src/index.js scrape-zip --location \"96740\" --checkin \"2026-04-01\" --checkout \"2026-04-07\"\n```\nOr refresh existing data:\n```bash\nnode src/index.js refresh\n```",
+          "timestamp": "2026-03-23T06:14:00Z"
+        }
+      ],
+      "createdAt": "2026-03-23T06:14:00Z"
+    },
+    {
+      "id": "trekker_scrape_demo",
+      "title": "Demo: Scrape Hawaii listings (96740)",
+      "description": "Test run of Trekker scraper targeting Hawaii zip code 96740.\n\n**Parameters:**\n- Location: 96740 (Hawaii)\n- Check-in: 2026-04-01\n- Check-out: 2026-04-07\n\n**Expected Output:**\n- Listings scraped & written to Google Sheet\n- Progress logged to #trekker-logs\n- Summary posted to #trekker\n\n**Command:**\n```bash\ncd ~/.openclaw/workspace/trekker\nnode src/index.js scrape-zip --location \"96740\" --checkin \"2026-04-01\" --checkout \"2026-04-07\"\n```",
+      "status": "backlog",
+      "project": "trekker",
+      "tags": ["trekker", "scrape", "demo"],
+      "subtasks": [
+        { "id": "sub_001", "title": "Launch Puppeteer & navigate to Airbnb", "done": false },
+        { "id": "sub_002", "title": "Scrape listing metadata", "done": false },
+        { "id": "sub_003", "title": "Extract pricing (original & discounted)", "done": false },
+        { "id": "sub_004", "title": "Write data to Google Sheet", "done": false },
+        { "id": "sub_005", "title": "Post summary to Discord", "done": false }
+      ],
+      "priority": "medium",
+      "comments": [],
+      "createdAt": "2026-03-23T06:14:00Z"
+    },
+    {
+      "id": "trekker_refresh_sheet",
+      "title": "Refresh existing listings (full sheet)",
+      "description": "Re-scrape all URLs in the Google Sheet to get latest prices and data.\n\n**Command:**\n```bash\ncd ~/.openclaw/workspace/trekker\nnode src/index.js refresh --sheet-id \"1rzTbeY0-5RviG692axrvRxnmW3Wy-K05RpYSXIR3GTc\"\n```\n\n**What happens:**\n- Reads all rows from the Listings tab\n- Visits each URL in parallel (respecting delays)\n- Updates pricing columns with current data\n- Posts progress to #trekker-logs\n- Sends final summary to #trekker",
+      "status": "backlog",
+      "project": "trekker",
+      "tags": ["trekker", "refresh"],
+      "subtasks": [
+        { "id": "sub_001", "title": "Read all listing URLs from sheet", "done": false },
+        { "id": "sub_002", "title": "Visit each URL & scrape current prices", "done": false },
+        { "id": "sub_003", "title": "Update sheet with new data", "done": false },
+        { "id": "sub_004", "title": "Send completion report to Discord", "done": false }
+      ],
+      "priority": "low",
+      "comments": [],
+      "createdAt": "2026-03-23T06:14:00Z"
     }
   ],
   "projects": [
     { "id": "guides", "name": "Guides", "color": "#10b981", "icon": "📚" },
-    { "id": "default", "name": "My Project", "color": "#3b82f6", "icon": "📁" }
+    { "id": "default", "name": "My Project", "color": "#3b82f6", "icon": "📁" },
+    { "id": "trekker", "name": "🏔️ Trekker", "color": "#f59e0b", "icon": "🧗" }
   ],
   "activities": [
+    { "type": "created", "actor": "Assistant", "task": "🏔️ Trekker — Airbnb Scraper Bot", "time": "2026-03-23 06:14" },
+    { "type": "created", "actor": "Assistant", "task": "Demo: Scrape Hawaii listings", "time": "2026-03-23 06:14" },
+    { "type": "created", "actor": "Assistant", "task": "Refresh existing listings", "time": "2026-03-23 06:14" },
     { "type": "created", "actor": "Mission Control", "task": "Onboarding Guide", "time": "just now" },
     { "type": "created", "actor": "Mission Control", "task": "User Guide", "time": "just now" }
   ],
-  "lastUpdated": "2026-01-01T00:00:00Z"
+  "lastUpdated": "2026-03-23T06:14:00Z"
 }
