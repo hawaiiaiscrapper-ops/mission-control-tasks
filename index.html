@@ -1833,9 +1833,18 @@ The heartbeat system needs more thought. Currently checking too frequently.`;
       console.warn('Failed to load from GitHub, using sample data:', e);
       loadSampleData();
     }
-    // Docs are local
-    const savedDocs = localStorage.getItem('mc-docs');
-    store.docs = savedDocs ? JSON.parse(savedDocs) : sampleDocs;
+    // Docs from GitHub or localStorage fallback
+    try {
+      const docsData = await fetchGitHubFile(s, 'data/docs.json');
+      if (docsData && docsData.docs) store.docs = docsData.docs;
+      else {
+        const savedDocs = localStorage.getItem('mc-docs');
+        store.docs = savedDocs ? JSON.parse(savedDocs) : sampleDocs;
+      }
+    } catch(e) {
+      const savedDocs = localStorage.getItem('mc-docs');
+      store.docs = savedDocs ? JSON.parse(savedDocs) : sampleDocs;
+    }
   }
 
   async function fetchGitHubFile(s, path) {
@@ -1911,7 +1920,7 @@ The heartbeat system needs more thought. Currently checking too frequently.`;
 
   function getSampleJournal() { return sampleJournal; }
 
-  return { load, getStore, saveLocal, commitTasksToGitHub, addActivity, loadSampleData, fetchGitHubFile, getSampleJournal };
+  return { load, getStore, saveLocal, commitTasksToGitHub, saveToGitHub, addActivity, loadSampleData, fetchGitHubFile, getSampleJournal };
 })();
 
 // ============================================================
@@ -2722,7 +2731,39 @@ const Docs = (() => {
     if (!doc) return;
     empty.style.display = 'none';
     content.style.display = 'block';
-    content.innerHTML = renderMarkdown(doc.content);
+    content.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:0.75rem;color:var(--text3);">Last edited: ${doc.updatedAt ? new Date(doc.updatedAt).toLocaleString() : new Date(doc.createdAt).toLocaleString()}</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="Docs.editDoc('${doc.id}')">✏️ Edit</button>
+        <button class="btn btn-secondary btn-sm" style="color:var(--red);" onclick="Docs.deleteDoc('${doc.id}')">🗑️ Delete</button>
+      </div>
+    </div>` + renderMarkdown(doc.content);
+  }
+
+  function editDoc(docId) {
+    const store = Data.getStore();
+    const doc = store.docs.find(d => d.id === docId);
+    if (!doc) return;
+    document.getElementById('dm-title').value = doc.title;
+    document.getElementById('dm-category').value = doc.category || '';
+    document.getElementById('dm-content').value = doc.content;
+    document.getElementById('doc-modal-title').textContent = '✏️ Edit Document';
+    editingDocId = docId;
+    document.getElementById('doc-modal-backdrop').classList.add('open');
+    setTimeout(() => document.getElementById('dm-content').focus(), 100);
+  }
+
+  function deleteDoc(docId) {
+    if (!confirm('Delete this document?')) return;
+    const store = Data.getStore();
+    store.docs = store.docs.filter(d => d.id !== docId);
+    localStorage.setItem('mc-docs', JSON.stringify(store.docs));
+    Data.saveToGitHub('data/docs.json', { docs: store.docs }, `🗑️ Delete doc`);
+    activeDocId = null;
+    render();
+    document.getElementById('docs-empty').style.display = 'block';
+    document.getElementById('docs-content').style.display = 'none';
+    Toast.show('Document deleted', 'info');
   }
 
   function renderMarkdown(md) {
@@ -2791,7 +2832,50 @@ const Docs = (() => {
     `).join('');
   }
 
+  function closeModal() {
+    document.getElementById('doc-modal-backdrop').classList.remove('open');
+  }
+
+  let editingDocId = null;
+
+  function saveDoc() {
+    const title = document.getElementById('dm-title').value.trim();
+    if (!title) { Toast.show('Document title required!', 'error'); return; }
+    const store = Data.getStore();
+
+    if (editingDocId) {
+      // Update existing doc
+      const doc = store.docs.find(d => d.id === editingDocId);
+      if (doc) {
+        doc.title = title;
+        doc.category = document.getElementById('dm-category').value.trim() || 'doc';
+        doc.content = document.getElementById('dm-content').value;
+        doc.updatedAt = new Date().toISOString();
+      }
+      editingDocId = null;
+    } else {
+      // New doc
+      const doc = {
+        id: 'd' + Date.now(),
+        title,
+        category: document.getElementById('dm-category').value.trim() || 'doc',
+        content: document.getElementById('dm-content').value,
+        createdAt: new Date().toISOString()
+      };
+      store.docs.push(doc);
+    }
+
+    localStorage.setItem('mc-docs', JSON.stringify(store.docs));
+    Data.saveToGitHub('data/docs.json', { docs: store.docs }, `📝 Save doc: ${title}`);
+    closeModal();
+    render();
+    const docId = editingDocId || store.docs[store.docs.length - 1].id;
+    viewDoc(store.docs.find(d => d.title === title)?.id || docId);
+    Toast.show(`Doc "${title}" saved!`, 'success');
+  }
+
   function openNewModal() {
+    editingDocId = null;
     document.getElementById('dm-title').value = '';
     document.getElementById('dm-category').value = '';
     document.getElementById('dm-content').value = '';
@@ -2800,30 +2884,7 @@ const Docs = (() => {
     setTimeout(() => document.getElementById('dm-title').focus(), 100);
   }
 
-  function closeModal() {
-    document.getElementById('doc-modal-backdrop').classList.remove('open');
-  }
-
-  function saveDoc() {
-    const title = document.getElementById('dm-title').value.trim();
-    if (!title) { Toast.show('Document title required!', 'error'); return; }
-    const store = Data.getStore();
-    const doc = {
-      id: 'd' + Date.now(),
-      title,
-      category: document.getElementById('dm-category').value.trim() || 'doc',
-      content: document.getElementById('dm-content').value,
-      createdAt: new Date().toISOString()
-    };
-    store.docs.push(doc);
-    localStorage.setItem('mc-docs', JSON.stringify(store.docs));
-    closeModal();
-    render();
-    viewDoc(doc.id);
-    Toast.show(`Doc "${title}" saved!`, 'success');
-  }
-
-  return { render, viewDoc, filter, openNewModal, closeModal, saveDoc, renderMarkdown };
+  return { render, viewDoc, filter, openNewModal, closeModal, saveDoc, editDoc, deleteDoc, renderMarkdown };
 })();
 
 // ============================================================
@@ -3288,7 +3349,7 @@ document.querySelectorAll('.nav-item[data-view]').forEach(item => {
 
 // Cache-busting: check for new version every 2 minutes and auto-reload
 (function cacheBuster() {
-  const CURRENT_VERSION = '2.4.0';
+  const CURRENT_VERSION = '2.5.0';
   async function checkVersion() {
     try {
       const r = await fetch('data/version.json?_=' + Date.now());

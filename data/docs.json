@@ -1,0 +1,28 @@
+{
+  "docs": [
+    {
+      "id": "instructions-log",
+      "title": "Instructions Log",
+      "category": "reference",
+      "tags": ["instructions", "log", "karthik"],
+      "content": "# Instructions Log — All Directives from Karthik\n\n_This file tracks every instruction/request Karthik has given, in chronological order._\n\n---\n\n## 2026-03-23\n\n### Session 1 (05:55 - 12:13 CDT)\n\n| # | Time | Instruction | Status |\n|---|------|-------------|--------|\n| 1 | 05:56 | No cron schedules for Trekker - scrape only on manual request | Done |\n| 2 | 06:14 | Continue working on trekker bot and add it to Mission Control | Done |\n| 3 | 06:57 | Swap to opus 4-6 | Done |\n| 4 | 11:59 | Add zip codes to track in Google Sheet, start with 96761 only | Done |\n| 5 | 12:04 | Rename sheet to 'Zip Code Listings', create 'Preferred Listings' sheet with Listings + Metadata tabs | Done |\n| 6 | 12:08 | Make sure you don't forget this use case | Done |\n| 7 | 12:09 | Log every input from Karthik | Done |\n| 8 | 12:11 | Document all instructions for reference | Done |\n| 9 | 12:13 | Add instructions log to Mission Control for editing | Done |\n\n---\n\n## Standing Instructions\n\n- **No cron schedules for Trekker** - scrape only on manual request\n- **Log every instruction** from Karthik\n- **Track zip codes from Google Sheet** - only scrape what's in the Zip Codes tab\n- **No name** - don't suggest names, don't ask for one\n- **No onboarding** - skip all intro/setup conversations\n- **Direct communication** - no fluff",
+      "createdAt": "2026-03-23T12:13:00Z"
+    },
+    {
+      "id": "trekker-reference",
+      "title": "Trekker - Airbnb Scraper Reference",
+      "category": "reference",
+      "tags": ["trekker", "scraper", "airbnb"],
+      "content": "# Trekker - Airbnb Scraper Bot\n\n## Overview\nScrapes Airbnb listings by zip code, dumps data to Google Sheets, posts progress to Discord.\n\n## Google Sheets\n\n### 1. Zip Code Listings\n- **ID:** 1rzTbeY0-5RviG692axrvRxnmW3Wy-K05RpYSXIR3GTc\n- **Tab: Listings** - Scraped listing data\n- **Tab: Zip Codes** - Zip codes to track (currently: 96761 Lahaina, HI)\n\n### 2. Preferred Listings\n- **ID:** 1kyxVDVkCWHSuBaS4PmQf30dZvCnSiY9TNHVA662-XM4\n- **Tab: Listings** - Curated/saved listings\n- **Tab: Metadata** - Amenities, rules, neighborhood details\n\n## Commands\n\n```bash\n# Scrape by location\ncd ~/.openclaw/workspace/trekker\nnode src/index.js scrape-zip --location \"96761\" --checkin \"2026-04-01\" --checkout \"2026-04-07\"\n\n# Refresh existing listings\nnode src/index.js refresh --sheet-id \"1rzTbeY0-5RviG692axrvRxnmW3Wy-K05RpYSXIR3GTc\"\n```\n\n## Config\n- Google account: hawaiiaiscrapper@gmail.com\n- Discord: #trekker (summaries), #trekker-logs (progress)\n- No cron schedules - manual only\n\n## Workflow\n1. Trekker reads zip codes from 'Zip Codes' tab\n2. Scrapes Airbnb for those locations\n3. Results go to 'Listings' tab\n4. Karthik moves preferred listings to Preferred Listings sheet",
+      "createdAt": "2026-03-23T12:13:00Z"
+    },
+    {
+      "id": "mission-control-reference",
+      "title": "Mission Control Setup",
+      "category": "guide",
+      "tags": ["setup", "dashboard", "github"],
+      "content": "# Mission Control Setup\n\n## URLs\n- **Dashboard:** https://hawaiiaiscrapper-ops.github.io/mission-control-tasks/\n- **Repo:** github.com/hawaiiaiscrapper-ops/mission-control-tasks\n\n## Settings\n- GitHub Owner: hawaiiaiscrapper-ops\n- GitHub Repo: mission-control-tasks\n- GitHub Branch: main\n- Gateway: http://localhost:18789 (loopback only, won't work from GitHub Pages)\n\n## Data Files\n- `data/tasks.json` - Tasks + projects + activities\n- `data/projects.json` - Project list with progress\n- `data/crons.json` - Cron job definitions\n- `data/docs.json` - Documentation (this!)\n- `data/version.json` - Cache-busting version\n- `data/journal.md` - Daily journal entries\n\n## Webhook\n- Hook path: /hooks/github\n- Transform: github-mission-control.mjs\n- Session: hook:mission-control\n\n## Known Issues\n- Gateway URL won't connect from GitHub Pages (CORS) - Team view won't load\n- Cache-busting auto-reloads every 2 min via version.json check",
+      "createdAt": "2026-03-23T12:13:00Z"
+    }
+  ]
+}
