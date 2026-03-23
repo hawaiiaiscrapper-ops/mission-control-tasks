@@ -3285,6 +3285,28 @@ document.querySelectorAll('.nav-item[data-view]').forEach(item => {
     if (item.dataset.view !== 'office') Office.stop();
   });
 });
+
+// Cache-busting: check for new version every 2 minutes and auto-reload
+(function cacheBuster() {
+  const CURRENT_VERSION = '2.4.0';
+  async function checkVersion() {
+    try {
+      const r = await fetch('data/version.json?_=' + Date.now());
+      if (r.ok) {
+        const v = await r.json();
+        if (v.version && v.version !== CURRENT_VERSION) {
+          console.log(`New version detected: ${v.version} (current: ${CURRENT_VERSION}). Reloading...`);
+          location.reload(true);
+        }
+      }
+    } catch(e) { /* ignore */ }
+  }
+  // Also fetch index.html with cache bypass
+  if ('caches' in window) {
+    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+  }
+  setInterval(checkVersion, 120000);
+})();
 </script>
 </body>
 </html>
