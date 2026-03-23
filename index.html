@@ -3349,7 +3349,7 @@ document.querySelectorAll('.nav-item[data-view]').forEach(item => {
 
 // Cache-busting: check for new version every 2 minutes and auto-reload
 (function cacheBuster() {
-  const CURRENT_VERSION = '2.5.0';
+  const CURRENT_VERSION = '2.5.1';
   async function checkVersion() {
     try {
       const r = await fetch('data/version.json?_=' + Date.now());
