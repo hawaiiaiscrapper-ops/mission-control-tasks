@@ -1,6 +1,7 @@
 {
   "projects": [
-    {"id": "project1", "name": "Build AI Tools", "progress": 50},
-    {"id": "project2", "name": "Daily Journaling", "progress": 80}
+    {"id": "guides", "name": "📚 Guides", "progress": 100, "color": "#10b981", "icon": "📚"},
+    {"id": "default", "name": "📁 My Project", "progress": 0, "color": "#3b82f6", "icon": "📁"},
+    {"id": "trekker", "name": "🏔️ Trekker", "progress": 80, "color": "#f59e0b", "icon": "🧗"}
   ]
 }
